@@ -4,7 +4,7 @@ version = "0.1.0"
 description = ""
 authors = ["Julien Roullé <ju.roulle@gmail.com>"]
 readme = "README.md"
-packages = [{include = "stridze_tools"}]
+packages = []
 
 [tool.poetry.dependencies]
 python = "^3.11,<3.12"
