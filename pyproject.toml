@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "stridze-tools"
+version = "0.1.0"
+description = ""
+authors = ["Julien Roullé <ju.roulle@gmail.com>"]
+readme = "README.md"
+packages = [{include = "stridze_tools"}]
+
+[tool.poetry.dependencies]
+python = "^3.11,<3.12"
+streamlit = "^1.22.0"
+pandas = "^2.0.1"
+numpy = "^1.24.3"
+gpxpy = "^1.5.0"
+plotly = "^5.14.1"
+geopy = "^2.3.0"
+srtm-py = "^0.3.7"
+scipy = "^1.10.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
