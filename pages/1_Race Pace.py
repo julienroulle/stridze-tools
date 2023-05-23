@@ -5,12 +5,15 @@ DISTANCES = {
     "Half Marathon": 21.097,
     "10km": 10.000,
     "5km": 5.000,
-    "Custom": None,
+    "Custom": 0.,
 }
 
 
 def get_pace(dist, time):
-    pace = time / dist
+    try:
+        pace = time / dist
+    except ZeroDivisionError:
+        pace = 0
     pace_min, pace_sec = pace // 60, pace % 60
     return pace_min, pace_sec
 
@@ -36,7 +39,7 @@ with pace_tab:
     if st.session_state['system'] == 'Imperial':
         distance /= 1.609
 
-    raw_distance = pace_tab_distance_col.number_input("Write your distance here", 1.0, value=distance, key="pace_tab_distance_col_distance")
+    raw_distance = pace_tab_distance_col.number_input("Write your distance here", 0.0, value=distance, key="pace_tab_distance_col_distance")
 
     pace_tab_time_col.subheader("Time")
     pace_tab_time_col1, pace_tab_time_col2, pace_tab_time_col3 = pace_tab_time_col.columns(3)
@@ -99,7 +102,7 @@ with time_tab:
     if st.session_state['system'] == 'Imperial':
         distance /= 1.609
 
-    raw_distance = time_tab_distance_col.number_input("Write your distance here", 1.0, value=distance)
+    raw_distance = time_tab_distance_col.number_input("Write your distance here", 0.0, value=distance)
 
     time = raw_distance * pace
     h = time // 3600
