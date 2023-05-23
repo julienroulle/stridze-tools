@@ -45,7 +45,7 @@ with pace_tab:
     s = pace_tab_time_col3.number_input("Seconds", value=0, min_value=0, max_value=59, key="pace_tab_time_col_seconds")
     time = h * 3600 + m * 60 + s
     pace_min, pace_sec = get_pace(raw_distance, time)
-    st.header(f"Average pace: {pace_min:.0f}m{pace_sec:2.0f}s/{dist_unit}")
+    st.header(f"Average pace: {pace_min:.0f}:{pace_sec:02.0f}s/{dist_unit}")
 
 
 with distance_tab:
