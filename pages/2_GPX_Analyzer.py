@@ -149,11 +149,11 @@ if uploaded_file is not None:
     dist = np.cumsum(dist)
     df['cumulative_distance'] = dist
 
-    st.write(f"Length Geo2d: {df.cumulative_distance.iloc[-1]:.0f}m")
+    st.subheader(f"Length: {df.cumulative_distance.iloc[-1] / 1000:.2f}km")
 
     df['elevation_diff'] = df['elev'].diff().fillna(0)
 
-    st.write(f"Elevation Gain: {round(sum(df[df['elevation_diff'] > 0]['elevation_diff']), 2)}")
+    st.subheader(f"Elevation Gain: {sum(df[df['elevation_diff'] > 0]['elevation_diff']):.0f}m")
 
     st.header('Time objective')
     col1, col2, col3, col4 = st.columns([1, 1, 1, 3])
