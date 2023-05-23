@@ -243,9 +243,6 @@ if uploaded_file is not None:
     elev_df['pace'] = elev_df['pace'] * (1 - splits / 100 * (mid_distance - elev_df['cumulative_distance']) / mid_distance)
     # elev_df['effort_adjusted_pace'] = elev_df['split_adjusted_pace'] * (1 - uphill_effort / 100 * (mid_distance - elev_df['cumulative_distance']) / mid_distance)
 
-    st.write(elev_df)
-
-
     display_df = pd.DataFrame()
     display_df['Split distance'] = elev_df.segment_distance.apply(lambda row: f"{row / 1000:.3f} km")
     display_df['Elevation'] = elev_df.smooth_elevation.apply(lambda row: f"{row:.0f} m")
