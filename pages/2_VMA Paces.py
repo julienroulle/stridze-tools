@@ -40,7 +40,6 @@ with short_distance_tab:
         f"{distance}m": [f"{pace * distance / 1000 // 60:.0f}min{pace * distance / 1000 % 60:02.1f}s" for pace in paces] for distance in distances
     }
     df = pd.DataFrame(times, index=[str(elt) + ' %' for elt in vma_percentages])
-    print(df.T)
     st.dataframe(df.T, use_container_width=True)
 
 with long_distance_tab:
