@@ -187,8 +187,7 @@ if uploaded_file is not None:
         ],
     ))
 
-    window = st.slider("Smoothing window (m)", min_value=0, max_value=int(df.cumulative_distance.iloc[-1] // 250 // 10 * 10), value=50, step=10)
-
+    window = st.slider("Smoothing window (m)", min_value=0, max_value=1000, value=100, step=10)
 
     fig_2 = px.line(df, x='cumulative_distance', y='elev', template='plotly_dark')
 
