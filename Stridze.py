@@ -2,7 +2,7 @@ import streamlit as st
 
 st.set_page_config(
     page_title="Hello",
-    page_icon="👋",
+    page_icon=":running_shirt_with_sash:",
 )
 
 system = st.sidebar.radio("Unit System", ('Metric', 'Imperial'), index=0)
