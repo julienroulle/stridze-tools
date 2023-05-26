@@ -1,6 +1,6 @@
 import streamlit as st
-import pandas as pd
-import numpy as np
+
+from src.vdot import user_VDOT
 
 DISTANCES = {
     "Marathon": 42.195,
@@ -21,11 +21,11 @@ def get_pace(dist, time):
 
 system = st.sidebar.radio("Unit System", ('Metric', 'Imperial'), index=0)
 
-dist_unit = 'km'
+dist_unit = 'kilometers'
 if system is not None:
     st.session_state['system'] = system
     if st.session_state['system'] == 'Imperial':
-        dist_unit = 'mi'
+        dist_unit = 'miles'
 
 st.header('VDOT Calculator')
 
@@ -34,33 +34,42 @@ pace_disabled = input_method == 'Distance & Time'
 time_disabled = input_method == 'Distance & Pace'
 distance_disabled = input_method == 'Time & Pace'
 
-with st.form("my_form", clear_on_submit=True):
-    st.subheader('Distance')
-    distance_selection_col, distance_input_col = st.columns(2)
-    default_distance = distance_selection_col.selectbox("Select distance", list(DISTANCES.keys()), key="pace_tab_distance_col_default_distance", disabled=distance_disabled)
-    distance = DISTANCES[default_distance]
 
-    if st.session_state['system'] == 'Imperial':
-        distance /= 1.609
+st.subheader('Distance')
+distance_selection_col, distance_input_col = st.columns(2)
+default_distance = distance_selection_col.selectbox("Select distance", list(DISTANCES.keys()), key="pace_tab_distance_col_default_distance", disabled=distance_disabled)
+distance = DISTANCES[default_distance]
 
-    raw_distance = distance_input_col.number_input("Write your distance here", 0.0, value=distance, key="pace_tab_distance_col_distance", disabled=distance_disabled)
+if st.session_state['system'] == 'Imperial':
+    distance /= 1.609
 
-    st.subheader('Time')
+raw_distance = distance_input_col.number_input("Write your distance here", 0.0, value=distance, key="pace_tab_distance_col_distance", disabled=distance_disabled)
 
-    pace_tab_time_col1, pace_tab_time_col2, pace_tab_time_col3 = st.columns(3)
-    h = pace_tab_time_col1.number_input("Hours", value=0, min_value=0, key="pace_tab_time_col_hours", disabled=time_disabled)
-    m = pace_tab_time_col2.number_input("Minutes", value=0, min_value=0, max_value=59, key="pace_tab_time_col_minutes", disabled=time_disabled)
-    s = pace_tab_time_col3.number_input("Seconds", value=0, min_value=0, max_value=59, key="pace_tab_time_col_seconds", disabled=time_disabled)
-    time = h * 3600 + m * 60 + s
+st.subheader('Time')
 
-    st.subheader('Pace')
-    distance_tab_pace_col1, distance_tab_pace_col2 = st.columns(2)
-    pace_min = distance_tab_pace_col1.number_input("Minutes", value=0, min_value=0, max_value=59, key="distance_tab_pace_col_minutes", disabled=pace_disabled)
-    pace_sec = distance_tab_pace_col2.number_input("Seconds", value=0, min_value=0, max_value=59, key="distance_tab_pace_col_seconds", disabled=pace_disabled)
+pace_tab_time_col1, pace_tab_time_col2, pace_tab_time_col3 = st.columns(3)
+h = pace_tab_time_col1.number_input("Hours", value=0, min_value=0, key="pace_tab_time_col_hours", disabled=time_disabled)
+m = pace_tab_time_col2.number_input("Minutes", value=0, min_value=0, max_value=59, key="pace_tab_time_col_minutes", disabled=time_disabled)
+s = pace_tab_time_col3.number_input("Seconds", value=0, min_value=0, max_value=59, key="pace_tab_time_col_seconds", disabled=time_disabled)
+time = h * 60 + m + s / 60
 
-    submitted = st.form_submit_button("Submit")
-    if submitted:
-        print(raw_distance, time, pace_min, pace_sec)
+st.subheader('Pace')
+distance_tab_pace_col1, distance_tab_pace_col2 = st.columns(2)
+pace_min = distance_tab_pace_col1.number_input("Minutes", value=0, min_value=0, max_value=59, key="distance_tab_pace_col_minutes", disabled=pace_disabled)
+pace_sec = distance_tab_pace_col2.number_input("Seconds", value=0, min_value=0, max_value=59, key="distance_tab_pace_col_seconds", disabled=pace_disabled)
+
+if input_method == 'Distance & Time':
+    pace_min, pace_sec = get_pace(raw_distance, time)
+elif input_method == 'Distance & Pace':
+    time = raw_distance * (pace_min + pace_sec / 60)
+elif input_method == 'Time & Pace':
+    raw_distance = time / (pace_min + pace_sec / 60)
+
+try:
+    st.title(f"VDOT: {user_VDOT(raw_distance, dist_unit, time):.2f}")
+except ZeroDivisionError:
+    st.title("VDOT: 0.00")
+# print(raw_distance, time, pace_min, pace_sec)
 
 equivalent_tab, training_tab = st.tabs(['Equivalent Times', 'Training Paces'])
 
