@@ -233,20 +233,18 @@ if uploaded_file is not None:
     elev_df['time'] *= time_ratio
 
     elev_df['pace'] = elev_df['time'] / elev_df['segment_distance'] * 1000
-
-    # def adjust_pace(df, splits, uphill_effort):
-
-
-    # elev_df['adjusted_pace'] = adjust_pace(elev_df, splits, uphill_effort)
+    
     mid_distance = total_distance / 2
     elev_df['pace'] = elev_df['pace'] * (1 - splits / 100 * (mid_distance - elev_df['cumulative_distance']) / mid_distance)
     # elev_df['effort_adjusted_pace'] = elev_df['split_adjusted_pace'] * (1 - uphill_effort / 100 * (mid_distance - elev_df['cumulative_distance']) / mid_distance)
 
     display_df = pd.DataFrame()
     display_df['Split distance'] = elev_df.segment_distance.apply(lambda row: f"{row / 1000:.3f} km")
+    display_df['Cumulative distance'] = elev_df.segment_distance.cumsum().apply(lambda row: f"{row / 1000:.3f} km")
     display_df['Elevation'] = elev_df.smooth_elevation.apply(lambda row: f"{row:.0f} m")
     display_df['Pace'] = elev_df.pace.apply(lambda row: f"{row // 60:.0f}:{row % 60:02.0f} min/km")
     display_df['Duration'] = elev_df.apply(lambda row: f"{row.segment_distance / 1000 * row.pace // 60:.0f}:{row.segment_distance / 1000 * row.pace % 60:02.0f} min", axis=1)
+    display_df['Cumulative Duration'] = elev_df.time.cumsum().apply(lambda row: f"{row // 3660:.0f}h{row // 60 % 60:02.0f}m{row % 60:02.0f}s")
     display_df = display_df.reset_index().drop(columns='index')
     st.dataframe(display_df, use_container_width=True)
 
