@@ -244,7 +244,7 @@ if uploaded_file is not None:
     display_df['Elevation'] = elev_df.smooth_elevation.apply(lambda row: f"{row:.0f} m")
     display_df['Pace'] = elev_df.pace.apply(lambda row: f"{row // 60:.0f}:{row % 60:02.0f} min/km")
     display_df['Duration'] = elev_df.apply(lambda row: f"{row.segment_distance / 1000 * row.pace // 60:.0f}:{row.segment_distance / 1000 * row.pace % 60:02.0f} min", axis=1)
-    display_df['Cumulative Duration'] = elev_df.time.cumsum().apply(lambda row: f"{row // 3660:.0f}h{row // 60 % 60:02.0f}m{row % 60:02.0f}s")
+    display_df['Cumulative Duration'] = elev_df.time.cumsum().apply(lambda row: f"{round(row) // 3600:.0f}h{round(row) // 60 % 60:02.0f}m{round(row) % 60:02.0f}s")
     display_df = display_df.reset_index().drop(columns='index')
     st.dataframe(display_df, use_container_width=True)
 

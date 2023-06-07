@@ -4,7 +4,9 @@ version = "0.1.0"
 description = ""
 authors = ["Julien Roullé <ju.roulle@gmail.com>"]
 readme = "README.md"
-packages = []
+packages = [
+    { include = "src" }
+]
 
 [tool.poetry.dependencies]
 python = "^3.11,<3.12"
@@ -16,7 +18,12 @@ plotly = "^5.14.1"
 geopy = "^2.3.0"
 srtm-py = "^0.3.7"
 scipy = "^1.10.1"
+xgboost = "^1.7.5"
+garminconnect = "^0.1.55"
 
+
+[tool.poetry.group.dev.dependencies]
+ipykernel = "^6.23.1"
 
 [build-system]
 requires = ["poetry-core"]
