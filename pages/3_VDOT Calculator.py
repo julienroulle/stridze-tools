@@ -1,6 +1,9 @@
 import streamlit as st
 
+import pandas as pd
+
 from src.vdot import user_VDOT
+from src.utils import num_time_to_str_time
 
 DISTANCES = {
     "Marathon": 42.195,
@@ -66,36 +69,37 @@ elif input_method == 'Time & Pace':
     raw_distance = time / (pace_min + pace_sec / 60)
 
 try:
-    st.title(f"VDOT: {user_VDOT(raw_distance, dist_unit, time):.2f}")
+    vdot = user_VDOT(raw_distance, dist_unit, time)
 except ZeroDivisionError:
-    st.title("VDOT: 0.00")
+    vdot = 0
+
+st.title(f"VDOT: {vdot:.2f}")
 # print(raw_distance, time, pace_min, pace_sec)
 
 equivalent_tab, training_tab = st.tabs(['Equivalent Times', 'Training Paces'])
 
-# with equivalent_tab:
-#     pace = 3600 / speed
+with equivalent_tab:
+    df = pd.read_csv('data/interim/vdot-to-race-paces-coefficients.csv')
 
-#     vma_percentages = np.concatenate(([60], np.arange(70, 115, 5)))
-#     speeds = speed * vma_percentages / 100.
-#     paces = pace / (vma_percentages / 100)
-#     df = pd.DataFrame({
-#         'VMA': [str(elt) + ' %' for elt in vma_percentages],
-#         f'Speed ({dist_unit}/h)': [round(speed, 2) for speed in speeds],
-#         f'Paces (min/{dist_unit})': [f"{pace // 60:.0f}:{pace % 60:02.0f}" for pace in paces]
-#     })
-#     df = df.set_index('VMA')
+    df['Time'] = df.Coef1 * vdot + df.Coef2 * vdot ** 2 + df.Coef3 * vdot ** 3 + df.Coef4 * vdot ** 4 + df.Intercept
 
-#     st.dataframe(df)
+    df.Time = df.Time.apply(num_time_to_str_time)
 
-# with training_tab:
-#     pace = 3600 / speed
-#     vma_percentages = np.arange(85, 120, 5)
-#     distances = np.arange(100, 900, 100)
-#     paces = pace / (vma_percentages / 100)
-#     times = {
-#         f"{distance}m": [f"{pace * distance / 1000 // 60:.0f}min{pace * distance / 1000 % 60:02.1f}s" for pace in paces] for distance in distances
-#     }
-#     df = pd.DataFrame(times, index=[str(elt) + ' %' for elt in vma_percentages])
-#     st.dataframe(df.T, use_container_width=True)
+    df = df.set_index('Distance')
+
+    st.dataframe(df['Time'])
+
+with training_tab:
+    df = pd.read_csv('data/interim/vdot-to-training-paces-coefficients.csv')
+
+    df['Pace'] = df.Coef1 * vdot + df.Coef2 * vdot ** 2 + df.Coef3 * vdot ** 3 + df.Coef4 * vdot ** 4 + df.Intercept
+
+    if st.session_state['system'] == 'Imperial':
+        df['Pace'] *= 1.609
+
+    df.Pace = df.Pace.apply(num_time_to_str_time)
+
+    df = df.set_index('Distance')
+
+    st.dataframe(df['Pace'])
 

@@ -2,6 +2,10 @@
 import math
 import numpy as np
 
+def percent_hrr_to_percent_vo2max(percent_hrr):
+    # Source: 10.1249/01.mss.0000246996.63976.5f
+    return 1.069 * percent_hrr -5.747
+
 def convert_distance_to_meters(distance, units):
     """Return distance in meters
 
@@ -148,7 +152,7 @@ def velocity_to_min_per_mile(velocity):
 def velocity_to_min_per_km(velocity):
     """Return minutes per km"""
     pace = 1000 / velocity
-    print(pace)
+    # print(pace)
     pace_min = int(pace)
     pace_sec = int((pace - pace_min) * 60)
     return pace_min, pace_sec
@@ -187,11 +191,17 @@ def user_VDOT(distance, units, time):
     race_VO2 = get_VO2_from_velocity(vel)
 
     VDOT = race_VO2 / percent_VO2
-    target = (11 * (-0.182258+np.sqrt(0.182258**2-4*0.000104*(-4.6-1.*VDOT)))) / (2*0.000104)
-    print(target)
-    print(velocity_to_min_per_km(get_velocity_from_VO2(VDOT)))
-    print(velocity_to_min_per_km(get_velocity_from_VO2(VDOT) * 0.95))
-    print(velocity_to_min_per_km(get_velocity_from_VO2(VDOT) * 0.85))
+    # target = (11 * (-0.182258+np.sqrt(0.182258**2-4*0.000104*(-4.6-1.*VDOT)))) / (2*0.000104)
+    # print(target)
+    print("###")
+    print("Velocity: ", get_velocity_from_VO2(VDOT))
+    print("Velocit (%): ", 196 / get_velocity_from_VO2(VDOT))
+    print("10k pace: ", velocity_to_min_per_km(get_velocity_from_VO2(VDOT) * 0.935))
+    print("R pace: ", velocity_to_min_per_km(get_velocity_from_VO2(VDOT) * 1.06))
+    print("I pace: ", velocity_to_min_per_km(get_velocity_from_VO2(VDOT) * 0.975))
+    print("T pace: ", velocity_to_min_per_km(get_velocity_from_VO2(VDOT) * 0.9))
+    print("M pace: ", velocity_to_min_per_km(get_velocity_from_VO2(VDOT) * 0.85))
+    print("E pace: ", velocity_to_min_per_km(get_velocity_from_VO2(VDOT) * 0.73))
     return VDOT
 
 
