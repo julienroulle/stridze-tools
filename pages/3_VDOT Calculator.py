@@ -87,7 +87,7 @@ with equivalent_tab:
 
     df = df.set_index('Distance')
 
-    st.dataframe(df['Time'])
+    st.dataframe(df[['Time']].T)
 
 with training_tab:
     df = pd.read_csv('data/interim/vdot-to-training-paces-coefficients.csv')
@@ -101,5 +101,5 @@ with training_tab:
 
     df = df.set_index('Distance')
 
-    st.dataframe(df['Pace'])
+    st.dataframe(df[['Pace']].T)
 
