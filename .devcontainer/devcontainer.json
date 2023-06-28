@@ -1,0 +1,51 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/postgres
+{
+	"name": "Stridze",
+	"dockerComposeFile": "docker-compose.yml",
+	"service": "workspace",
+	"workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+	"remoteEnv": { "PROJECT_FOLDER_NAME": "${localWorkspaceFolderBasename}" },
+	// "containerEnv": { "PROJECT_FOLDER_NAME": "${localWorkspaceFolderBasename}" },
+	"features": {
+		"ghcr.io/devcontainers-contrib/features/poetry:2": {},
+		"ghcr.io/devcontainers-contrib/features/zsh-plugins:0": {}
+	},
+
+	// Use 'forwardPorts' to make a list of ports inside the container available locally.
+	// This can be used to network with other containers or the host.
+	"forwardPorts": [3306],
+
+	// Use 'postCreateCommand' to run commands after the container is created.
+	"postCreateCommand": "poetry install",
+
+	// Configure tool-specific properties.
+	"customizations": {
+        "vscode": {
+            "extensions": [
+                "ms-python.python", // Python Intellisense/Debugging
+                "ms-python.vscode-pylance",
+                "ms-toolsai.jupyter",
+                "ms-toolsai.jupyter-keymap",
+                "ms-toolsai.jupyter-renderers",
+                "njpwerner.autodocstring", // Easily create docstrings
+                "mhutchie.git-graph", // Nice Git Log Visualizer
+                "stkb.rewrap", // Easily line-wrap comments at the ruler(s) below.
+                "eamodio.gitlens"
+            ],
+            "settings": {
+				"terminal.integrated.defaultProfile.linux": "zsh", 
+                "[python]": {
+                    "editor.rulers": [88], // `black`'s default line width
+                    "editor.insertSpaces": true,
+                    "editor.tabSize": 4,
+					"terminal.activateEnvironment": false,
+					"pythonPath": "/workspaces/${localWorkspaceFolderBasename}/.venv/bin/python3"
+                }
+            }
+		}
+	}
+
+	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
+	// "remoteUser": "root"
+}

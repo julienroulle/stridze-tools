@@ -1,0 +1,7 @@
+FROM python:latest
+
+ARG PROJECT_FOLDER_NAME
+ENV PROJECT_ROOT_DIR=/workspaces/stridze-tools
+
+WORKDIR $PROJECT_ROOT_DIR
+ENV PATH="$PROJECT_ROOT_DIR/.venv/bin:$PATH"
