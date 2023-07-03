@@ -27,6 +27,7 @@ fitdecode = "^0.10.0"
 psycopg2 = "^2.9.6"
 mysql-connector-python = "^8.0.33"
 sqlalchemy = "^2.0.17"
+pydantic = "^1.10.9"
 
 
 [tool.poetry.group.dev.dependencies]
