@@ -5,7 +5,7 @@
 	"dockerComposeFile": "docker-compose.yml",
 	"service": "workspace",
 	"workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
-	"remoteEnv": { "PROJECT_FOLDER_NAME": "${localWorkspaceFolderBasename}" },
+	// "remoteEnv": { "PROJECT_FOLDER_NAME": "${localWorkspaceFolderBasename}" },
 	// "containerEnv": { "PROJECT_FOLDER_NAME": "${localWorkspaceFolderBasename}" },
 	"features": {
 		"ghcr.io/devcontainers-contrib/features/poetry:2": {},
@@ -31,7 +31,8 @@
                 "njpwerner.autodocstring", // Easily create docstrings
                 "mhutchie.git-graph", // Nice Git Log Visualizer
                 "stkb.rewrap", // Easily line-wrap comments at the ruler(s) below.
-                "eamodio.gitlens"
+                "eamodio.gitlens",
+				"mtxr.sqltools-driver-mysql"
             ],
             "settings": {
 				"terminal.integrated.defaultProfile.linux": "zsh", 
@@ -39,13 +40,13 @@
                     "editor.rulers": [88], // `black`'s default line width
                     "editor.insertSpaces": true,
                     "editor.tabSize": 4,
-					"terminal.activateEnvironment": false,
-					"pythonPath": "/workspaces/${localWorkspaceFolderBasename}/.venv/bin/python3"
+					"terminal.activateEnvironment": false
+					// "pythonPath": "/workspaces/${localWorkspaceFolderBasename}/.venv/bin/python3"
                 }
             }
 		}
-	}
+	},
 
 	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
-	// "remoteUser": "root"
+	"remoteUser": "root"
 }
