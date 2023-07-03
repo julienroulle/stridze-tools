@@ -8,9 +8,7 @@ engine = create_engine(
 )
 Base = declarative_base()
 
-from .models.user import User
-from .models.activity import Activity
-from .models.gpx_point import GPXPoint
+from .models import *
 
 Base.metadata.create_all(engine)
 
