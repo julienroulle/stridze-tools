@@ -11,6 +11,7 @@ DISTANCES = {
     "10km": 10.000,
     "5km": 5.000,
     "Custom": 0.,
+    None: 0.,
 }
 
 
@@ -40,7 +41,7 @@ distance_disabled = input_method == 'Time & Pace'
 
 st.subheader('Distance')
 distance_selection_col, distance_input_col = st.columns(2)
-default_distance = distance_selection_col.selectbox("Select distance", list(DISTANCES.keys()), key="pace_tab_distance_col_default_distance", disabled=distance_disabled)
+default_distance: str | None = distance_selection_col.selectbox("Select distance", list(DISTANCES.keys()), key="pace_tab_distance_col_default_distance", disabled=distance_disabled)
 distance = DISTANCES[default_distance]
 
 if st.session_state['system'] == 'Imperial':
@@ -83,6 +84,7 @@ with equivalent_tab:
 
     df['Time'] = df.Coef1 * vdot + df.Coef2 * vdot ** 2 + df.Coef3 * vdot ** 3 + df.Coef4 * vdot ** 4 + df.Intercept
 
+    df = df.sort_values(by='Time', ascending=False)
     df.Time = df.Time.apply(num_time_to_str_time)
 
     df = df.set_index('Distance')
@@ -97,6 +99,7 @@ with training_tab:
     if st.session_state['system'] == 'Imperial':
         df['Pace'] *= 1.609
 
+    df = df.sort_values(by='Pace', ascending=False)
     df.Pace = df.Pace.apply(num_time_to_str_time)
 
     df = df.set_index('Distance')
