@@ -3,21 +3,6 @@ from sqlalchemy.orm import relationship
 
 from .. import Base
 
-
-# class GPXTrack(Base):
-#     __tablename__ = 'gpx_tracks'
-
-#     id = Column(Integer, primary_key=True)
-#     name = Column(String(255))
-#     user_id = Column(Integer, ForeignKey('users.id'))
-
-#     user = relationship('User', back_populates='tracks')
-#     points = relationship('GPXPoint', back_populates='track')
-
-#     def __repr__(self):
-#         return f"<GPXTrack(id={self.id}, name={self.name})>"
-
-
 class GPXPoint(Base):
     __tablename__ = 'gpx_points'
 

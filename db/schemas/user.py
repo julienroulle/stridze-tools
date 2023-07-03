@@ -7,3 +7,10 @@ class UserBase(BaseModel):
     email: str
     password: str
     vdot: int
+
+
+class User(UserBase):
+    id: int
+
+    class Config:
+        orm_mode = True

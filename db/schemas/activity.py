@@ -1,4 +1,3 @@
-from datetime import datetime
 from pydantic import BaseModel
 
 
@@ -18,3 +17,10 @@ class ActivityBase(BaseModel):
     average_stride_length: float | None
     average_temperature: float | None
     calories: int | None
+
+
+class Activity(ActivityBase):
+    id: int
+
+    class Config:
+        orm_mode = True
