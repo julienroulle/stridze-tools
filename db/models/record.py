@@ -1,4 +1,4 @@
-from sqlalchemy import BIGINT, Column, Integer, Float, ForeignKey
+from sqlalchemy import BIGINT, Column, Integer, Float, ForeignKey, DateTime
 from sqlalchemy.orm import relationship
 
 from .. import Base
@@ -7,7 +7,7 @@ class Record(Base):
     __tablename__ = 'records'
 
     id = Column(Integer, primary_key=True)
-    timestamp = Column(Float)
+    timestamp = Column(DateTime)
     position_lat = Column(Float)
     position_long = Column(Float)
     distance = Column(Float)

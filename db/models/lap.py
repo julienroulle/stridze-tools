@@ -1,4 +1,4 @@
-from sqlalchemy import BIGINT, Column, Integer, Float, ForeignKey
+from sqlalchemy import BIGINT, Column, Integer, Float, ForeignKey, DateTime
 from sqlalchemy.orm import relationship
 
 from .. import Base
@@ -7,7 +7,7 @@ class Lap(Base):
     __tablename__ = 'laps'
 
     id = Column(Integer, primary_key=True)
-    start_time = Column(Float)
+    start_time = Column(DateTime)
     start_position_lat = Column(Float)
     start_position_long = Column(Float)
     total_elapsed_time = Column(Float)

@@ -25,6 +25,7 @@ class Activity(Base):
     user = relationship('User', back_populates='activities')
     points = relationship('GPXPoint', back_populates='activity')
     laps = relationship('Lap', back_populates='activity')
+    tcx_laps = relationship('TCXLap', back_populates='activity')
     records = relationship('Record', back_populates='activity')
 
     def __repr__(self):
