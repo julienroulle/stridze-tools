@@ -1,7 +1,8 @@
+from datetime import datetime
 from pydantic import BaseModel
 
 class RecordBase(BaseModel):
-    timestamp: float
+    timestamp: datetime
     position_lat: float
     position_long: float
     distance: float
@@ -11,7 +12,7 @@ class RecordBase(BaseModel):
     enhanced_speed: float
     heart_rate: int
     cadence: int
-    lap_id: int
+    activity_id: int
 
 
 class Record(RecordBase):

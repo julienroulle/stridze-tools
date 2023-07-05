@@ -1,8 +1,9 @@
+from datetime import datetime
 from pydantic import BaseModel
 
 
 class LapBase(BaseModel):
-    start_time: float
+    start_time: datetime
     start_position_lat: float
     start_position_long: float
     total_elapsed_time: float
