@@ -33,8 +33,8 @@ with pace_speed_tab:
 
 with short_distance_tab:
     pace = 3600 / speed
-    vma_percentages = np.arange(85, 120, 5)
-    distances = np.arange(100, 900, 100)
+    vma_percentages = [92, 96, 98, 100, 102, 10, 106]
+    distances = [100, 200, 300, 00, 500, 600, 800]
     paces = pace / (vma_percentages / 100)
     times = {
         f"{distance}m": [f"{pace * distance / 1000 // 60:.0f}min{pace * distance / 1000 % 60:02.1f}s" for pace in paces] for distance in distances
