@@ -33,7 +33,7 @@ with pace_speed_tab:
 
 with short_distance_tab:
     pace = 3600 / speed
-    vma_percentages = np.array([92, 96, 98, 100, 102, 10, 106])
+    vma_percentages = np.array([92, 96, 98, 100, 102, 104, 106])
     distances = np.array([100, 200, 300, 400, 500, 600, 800])
     paces = pace / (vma_percentages / 100)
     times = {
