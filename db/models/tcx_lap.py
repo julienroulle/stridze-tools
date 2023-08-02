@@ -12,8 +12,6 @@ class TCXLap(Base):
     maximum_speed = Column(Float)
     start_time = Column(DateTime)
     calories = Column(Float)
-    intensity = Column(String(255))
-    triggered_method = Column(String(255))
     average_bpm = Column(Integer)
     maximum_bpm = Column(Integer)
     activity_id = Column(BIGINT, ForeignKey('activities.id'))

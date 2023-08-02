@@ -7,8 +7,6 @@ class TCXLapSchema(BaseModel):
     maximum_speed: float
     start_time: str
     calories: float
-    intensity: str
-    triggered_method: str
     average_bpm: int
     maximum_bpm: int
     activity_id: int
