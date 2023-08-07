@@ -12,7 +12,7 @@ if system is not None:
 
 st.header('VMA based paces')
 
-speed = st.number_input(f"VMA ({dist_unit}/h)", min_value=0.0, max_value=30.0, value=19.5)
+speed = st.number_input(f"VMA ({dist_unit}/h)", min_value=0.0, max_value=30.0, value=19.4)
 
 pace_speed_tab, short_distance_tab, long_distance_tab, race_time_tab = st.tabs(['Pace and Speed', 'Short Distance', 'Long Distance', 'Race Times'])
 
@@ -43,7 +43,7 @@ with short_distance_tab:
     st.dataframe(df.T, use_container_width=True)
 
 with long_distance_tab:
-    vma_percentages = np.arange(70, 105, 5)
+    vma_percentages = [60, 65, 80, 85, 90, 95, 100] #np.arange(70, 105, 5)
     distances = np.arange(1000, 5100, 500)
     paces = pace / (vma_percentages / 100)
     times = {
