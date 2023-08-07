@@ -43,7 +43,7 @@ with short_distance_tab:
     st.dataframe(df.T, use_container_width=True)
 
 with long_distance_tab:
-    vma_percentages = [60, 65, 80, 85, 90, 95, 100] #np.arange(70, 105, 5)
+    vma_percentages = np.array([60, 65, 80, 85, 90, 95, 100]) #np.arange(70, 105, 5)
     distances = np.arange(1000, 5100, 500)
     paces = pace / (vma_percentages / 100)
     times = {
