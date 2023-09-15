@@ -16,3 +16,4 @@ cookiecutter_data_science.egg-info/
 
 # data
 data/raw/
+.env
