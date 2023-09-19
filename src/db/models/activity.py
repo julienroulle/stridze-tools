@@ -2,7 +2,7 @@ from sqlalchemy import BIGINT, Column, Float, ForeignKey, Integer, DECIMAL
 from sqlalchemy.orm import relationship
 
 from .. import Base
-    
+ 
 class Activity(Base):
     __tablename__ = "activities"
 
