@@ -15,7 +15,7 @@ import zipfile, io, os
 
 for activity in activities:
     activity_id = activity["activityId"]
-    if os.path.exists(f"{cwd}/data/raw/{activity_id}") or activity["activityType"]["typeKey"] not in ["trail_running", "running"]:
+    if os.path.exists(f"{cwd}/data/raw/{activity_id}") or activity["activityType"]["typeKey"] not in ["trail_running", "running", "swimming", "cycling"]:
         continue
     print("client.download_activities(%s)", activity_id)
     print("----------------------------------------------------------------------------------------")

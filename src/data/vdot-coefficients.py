@@ -20,18 +20,19 @@ df['VDOT1'] = df['VDOT']
 df['VDOT2'] = df['VDOT1'] * df['VDOT1']
 df['VDOT3'] = df['VDOT2'] * df['VDOT1']
 df['VDOT4'] = df['VDOT3'] * df['VDOT1']
+df['VDOT5'] = df['VDOT4'] * df['VDOT1']
 
 params = []
 
 for col in [c for c in df.columns if 'VDOT' not in c]:
     # Fit model
-    model = LinearRegression().fit(df[['VDOT1', 'VDOT2', 'VDOT3', 'VDOT4']], df[col])
+    model = LinearRegression().fit(df[['VDOT1', 'VDOT2', 'VDOT3', 'VDOT4', 'VDOT5']], df[col])
     
     # Store model parameters
-    params.append([col, model.intercept_, model.coef_[0], model.coef_[1], model.coef_[2], model.coef_[3]])
+    params.append([col, model.intercept_, model.coef_[0], model.coef_[1], model.coef_[2], model.coef_[3], model.coef_[4]])
 
 # Store all parameters to csv
-coefs = pd.DataFrame(params, columns=['Distance', 'Intercept', 'Coef1', 'Coef2', 'Coef3', 'Coef4'])
+coefs = pd.DataFrame(params, columns=['Distance', 'Intercept', 'Coef1', 'Coef2', 'Coef3', 'Coef4', 'Coef5'])
 coefs.to_csv('data/interim/vdot-to-training-paces-coefficients.csv', index=False)
 
 df = pd.read_csv('data/external/races.csv')
@@ -44,16 +45,17 @@ df['VDOT1'] = df['VDOT']
 df['VDOT2'] = df['VDOT1'] * df['VDOT1']
 df['VDOT3'] = df['VDOT2'] * df['VDOT1']
 df['VDOT4'] = df['VDOT3'] * df['VDOT1']
+df['VDOT5'] = df['VDOT4'] * df['VDOT1']
 
 params = []
 
 for col in [c for c in df.columns if 'VDOT' not in c]:
     # Fit model
-    model = LinearRegression().fit(df[['VDOT1', 'VDOT2', 'VDOT3', 'VDOT4']], df[col])
+    model = LinearRegression().fit(df[['VDOT1', 'VDOT2', 'VDOT3', 'VDOT4', 'VDOT5']], df[col])
     
     # Store model parameters
-    params.append([col, model.intercept_, model.coef_[0], model.coef_[1], model.coef_[2], model.coef_[3]])
+    params.append([col, model.intercept_, model.coef_[0], model.coef_[1], model.coef_[2], model.coef_[3], model.coef_[4]])
 
 # Store all parameters to csv
-coefs = pd.DataFrame(params, columns=['Distance', 'Intercept', 'Coef1', 'Coef2', 'Coef3', 'Coef4'])
+coefs = pd.DataFrame(params, columns=['Distance', 'Intercept', 'Coef1', 'Coef2', 'Coef3', 'Coef4', 'Coef5'])
 coefs.to_csv('data/interim/vdot-to-race-paces-coefficients.csv', index=False)
