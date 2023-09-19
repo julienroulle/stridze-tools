@@ -82,7 +82,7 @@ equivalent_tab, training_tab = st.tabs(['Equivalent Times', 'Training Paces'])
 with equivalent_tab:
     df = pd.read_csv('data/interim/vdot-to-race-paces-coefficients.csv')
 
-    df['Time'] = df.Coef1 * vdot + df.Coef2 * vdot ** 2 + df.Coef3 * vdot ** 3 + df.Coef4 * vdot ** 4 + df.Intercept
+    df['Time'] = df.Coef1 * vdot + df.Coef2 * vdot ** 2 + df.Coef3 * vdot ** 3 + df.Coef4 * vdot ** 4 + df.Coef5 * vdot ** 5 + df.Intercept
 
     df = df.sort_values(by='Time', ascending=False)
     df.Time = df.Time.apply(num_time_to_str_time)
@@ -94,7 +94,7 @@ with equivalent_tab:
 with training_tab:
     df = pd.read_csv('data/interim/vdot-to-training-paces-coefficients.csv')
 
-    df['Pace'] = df.Coef1 * vdot + df.Coef2 * vdot ** 2 + df.Coef3 * vdot ** 3 + df.Coef4 * vdot ** 4 + df.Intercept
+    df['Pace'] = df.Coef1 * vdot + df.Coef2 * vdot ** 2 + df.Coef3 * vdot ** 3 + df.Coef4 * vdot ** 4 + df.Coef5 * vdot ** 5 + df.Intercept
 
     if st.session_state['system'] == 'Imperial':
         df['Pace'] *= 1.609
