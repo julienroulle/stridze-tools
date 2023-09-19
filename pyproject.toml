@@ -30,6 +30,7 @@ html5lib = "^1.1"
 beautifulsoup4 = "^4.12.2"
 sqlmodel = "^0.0.8"
 python-dotenv = "^1.0.0"
+seaborn = "^0.12.2"
 
 [tool.poetry.group.dev.dependencies]
 ipykernel = "^6.23.1"
