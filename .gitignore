@@ -15,5 +15,6 @@ manual_test/
 cookiecutter_data_science.egg-info/
 
 # data
-data/
+data/raw
 .env
+data/external/data.parquet
