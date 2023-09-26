@@ -7,12 +7,18 @@ import fitdecode
 import gpxpy
 import pandas as pd
 import sqlalchemy
-from db import get_session
-from db.controllers import create_activity, create_user, get_db_size, get_user
-from db.models import GPXPoint, Lap, Record, TCXLap, TrackPoint
-from db.schemas.activity import ActivityBase
-from db.schemas.user import UserBase
 from lxml import objectify
+
+from stridze.db import get_session
+from stridze.db.controllers import (
+    clear_all_tables,
+    create_activity,
+    create_user,
+    get_user,
+)
+from stridze.db.models import GPXPoint, Lap, Record, TCXLap, TrackPoint
+from stridze.db.schemas.activity import ActivityBase
+from stridze.db.schemas.user import UserBase
 
 
 @contextmanager
@@ -87,9 +93,14 @@ def process_fit_files(activity_id, session):
                         "position_long",
                         "distance",
                         "altitude",
-                        "enhanced_altitude",
-                        "speed",
                         "enhanced_speed",
+                        "enhanced_altitude",
+                        "vertical_oscillation",
+                        "stance_time_percent",
+                        "stance_time",
+                        "vertical_ratio",
+                        "stance_time_balance",
+                        "step_length",
                         "heart_rate",
                         "cadence",
                     ]:
@@ -251,16 +262,98 @@ def main():
         password="Julien35830",
     )
     with session_scope() as session:
+        # clear_all_tables(session)
+        # exit(1)
         # create_user(db=session, user=user)
         user = get_user(session, "ju.roulle@gmail.com")
         print(user.id)
         # get_user(db, 1)
 
-    for activity_id in os.listdir("data/raw/"):
-        if activity_id.endswith(".DS_Store"):
-            continue
+        for activity_id in os.listdir("data/raw/"):
+            if activity_id.endswith(".DS_Store"):
+                continue
 
-        with session_scope() as session:
+            df = pd.read_csv(f"data/raw/{activity_id}/{activity_id}.csv")
+            df = df.replace("--", None)
+            result = df.loc[df.Intervalle == "Summary"].iloc[0]
+
+            try:
+                activity = ActivityBase(
+                    id=int(activity_id),
+                    user_id=user.id,
+                    elapsed_time=int(
+                        reduce(
+                            lambda acc, x: acc * 60 + float(x),
+                            result["Heure"].split(":"),
+                            0,
+                        )
+                    )
+                    if result["Heure"]
+                    else None,
+                    moving_time=int(
+                        reduce(
+                            lambda acc, x: acc * 60 + float(x),
+                            result["Temps de déplacement"].split(":"),
+                            0,
+                        )
+                    )
+                    if result["Temps de déplacement"]
+                    else None,
+                    distance=int(result[["Distance"]].astype(float).iloc[0]) * 1000,
+                    elevation_gain=int(result["Gain d'altitude"])
+                    if result["Gain d'altitude"]
+                    else None,
+                    elevation_loss=int(result["Perte d'altitude"])
+                    if result["Perte d'altitude"]
+                    else None,
+                    average_pace=int(
+                        reduce(
+                            lambda acc, x: acc * 60 + float(x),
+                            result["Allure moyenne"].split(":"),
+                            0,
+                        )
+                    )
+                    if result["Allure moyenne"]
+                    else None,
+                    average_moving_pace=int(
+                        reduce(
+                            lambda acc, x: acc * 60 + float(x),
+                            result["Allure moyenne en déplacement"].split(":"),
+                            0,
+                        )
+                    )
+                    if result["Allure moyenne en déplacement"]
+                    else None,
+                    average_cadence=int(result["Cadence de course moyenne"])
+                    if result["Cadence de course moyenne"]
+                    else None,
+                    average_heart_rate=int(result["Fréquence cardiaque moy."])
+                    if result["Fréquence cardiaque moy."]
+                    else None,
+                    max_heart_rate=int(result["Fréquence cardiaque maximale"])
+                    if result["Fréquence cardiaque maximale"]
+                    else None,
+                    average_stride_length=float(result["Longueur moyenne des foulées"])
+                    if result["Longueur moyenne des foulées"]
+                    else None,
+                    average_temperature=float(result["Température moyenne"])
+                    if result["Température moyenne"]
+                    else None,
+                    calories=int(result["Calories"]) if result["Calories"] else None,
+                )
+                create_activity(session, activity)
+
+            except sqlalchemy.exc.IntegrityError as ex:
+                # print("IntegrityError")
+                # print(ex.orig)
+                # print(ex.statement)
+                session.rollback()
+
+            except Exception as e:
+                print(e)
+                session.rollback()
+                continue
+
             # process_gpx_files(activity_id, session)
             process_fit_files(activity_id, session)
             # process_tcx_files(activity_id, session)
