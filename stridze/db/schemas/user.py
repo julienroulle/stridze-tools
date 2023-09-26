@@ -6,7 +6,6 @@ class UserBase(BaseModel):
     last_name: str
     email: str
     password: str
-    vdot: int
 
 
 class User(UserBase):
