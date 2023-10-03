@@ -1,4 +1,5 @@
 from datetime import datetime
+
 from pydantic import BaseModel
 
 
@@ -9,16 +10,16 @@ class LapBase(BaseModel):
     total_elapsed_time: float
     total_distance: float
     total_calories: int
-    avg_speed: float
-    max_speed: float
+    avg_speed: float | None
+    max_speed: float | None
     total_ascent: float
     total_descent: float
-    avg_heart_rate: int
-    max_heart_rate: int
+    avg_heart_rate: int | None
+    max_heart_rate: int | None
     avg_cadence: int
     max_cadence: int
-    avg_power: int
-    max_power: int
+    avg_power: int | None
+    max_power: int | None
     activity_id: int
 
 

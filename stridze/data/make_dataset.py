@@ -13,11 +13,15 @@ from stridze.db import get_session
 from stridze.db.controllers import (
     clear_all_tables,
     create_activity,
+    create_lap,
+    create_record,
     create_user,
     get_user,
 )
 from stridze.db.models import GPXPoint, Lap, Record, TCXLap, TrackPoint
 from stridze.db.schemas.activity import ActivityBase
+from stridze.db.schemas.lap import LapBase
+from stridze.db.schemas.record import RecordBase
 from stridze.db.schemas.user import UserBase
 
 
@@ -110,8 +114,8 @@ def process_fit_files(activity_id, session):
                             and record[elt] is not None
                         ):
                             record[elt] /= 2**32 / 360
-                    record = Record(**record)
-                    session.add(record)
+                    create_record(session, RecordBase(**record))
+
                 if frame.name == "lap":
                     lap = {"activity_id": activity_id}
                     for elt in [
@@ -138,8 +142,8 @@ def process_fit_files(activity_id, session):
                             and lap[elt] is not None
                         ):
                             lap[elt] /= 2**32 / 360
-                    lap = Lap(**lap)
-                    session.add(lap)
+                    create_lap(session, LapBase(**lap))
+
         session.commit()
 
 
@@ -299,7 +303,7 @@ def main():
                     )
                     if result["Temps de déplacement"]
                     else None,
-                    distance=int(result[["Distance"]].astype(float).iloc[0]) * 1000,
+                    distance=int(result[["Distance"]].astype(float).iloc[0] * 1000),
                     elevation_gain=int(result["Gain d'altitude"])
                     if result["Gain d'altitude"]
                     else None,
@@ -344,9 +348,9 @@ def main():
                 create_activity(session, activity)
 
             except sqlalchemy.exc.IntegrityError as ex:
-                # print("IntegrityError")
-                # print(ex.orig)
-                # print(ex.statement)
+                print("IntegrityError")
+                print(ex.orig)
+                print(ex.statement)
                 session.rollback()
 
             except Exception as e:
