@@ -28,7 +28,7 @@ engine = create_engine(connection_url, poolclass=QueuePool)
 
 Base = declarative_base()
 
-from stridze.db.models import *
+from stridze.db.models import Activity, Lap, Record, User
 
 Base.metadata.create_all(engine)
 
