@@ -17,6 +17,7 @@ class StravaSchema(BaseModel):
     elevation: float
     activity_id: int
     user_id: int
+    activity_type: str
 
 
 class Strava(StravaSchema):

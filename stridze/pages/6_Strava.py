@@ -56,6 +56,7 @@ def process_activity(activity, strava_auth, session):
         d["timestamp"] = timestamp
         d["user_id"] = strava_auth["athlete"]["id"]
         d["activity_id"] = activity["id"]
+        d["activity_type"] = activity["sport_type"]
         d = StravaSchema.parse_obj(d)
         d = Strava(**d.dict())
         session.add(d)

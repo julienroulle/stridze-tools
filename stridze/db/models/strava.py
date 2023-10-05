@@ -1,4 +1,4 @@
-from sqlalchemy import BIGINT, Boolean, Column, DateTime, Float, Integer
+from sqlalchemy import BIGINT, Boolean, Column, DateTime, Float, Integer, String
 
 from .. import Base
 
@@ -20,3 +20,4 @@ class Strava(Base):
     elevation = Column(Float)
     activity_id = Column(BIGINT)
     user_id = Column(BIGINT)
+    activity_type = Column(String(255))
