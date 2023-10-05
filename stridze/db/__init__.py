@@ -8,8 +8,8 @@ from sqlalchemy.pool import QueuePool
 
 # Replace the placeholders with your actual database information
 # Detect platform to set the environment
-environ = "DEV"
-# environ = "PROD"
+# environ = "DEV"
+environ = "PROD"
 
 # Load the stored environment variables
 load_dotenv(find_dotenv())
