@@ -211,6 +211,18 @@ def select_strava_activity(auth):
     return activity
 
 
+def download_all_activities(auth):
+    activity_page = 1
+    activity_list = []
+    activities = get_activities(auth=auth, page=activity_page)
+
+    while activities:
+        activity_page += 1
+        activity_list.extend(activities)
+        activities = get_activities(auth=auth, page=activity_page)
+    return activity_list
+
+
 @st.cache_data(
     show_spinner=False,
     max_entries=30,
