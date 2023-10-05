@@ -15,18 +15,12 @@ environ = "DEV"
 load_dotenv(find_dotenv())
 
 # Get the values
-# username = os.getenv(f"{environ}_DATABASE_USERNAME")
-# password = os.getenv(f"{environ}_DATABASE_PASSWORD")
-# host = os.getenv(f"{environ}_DATABASE_HOST")
-# port = os.getenv(f"{environ}_DATABASE_PORT")
-# database = os.getenv(f"{environ}_DATABASE_NAME")
+username = os.getenv(f"{environ}_DATABASE_USERNAME")
+password = os.getenv(f"{environ}_DATABASE_PASSWORD")
+host = os.getenv(f"{environ}_DATABASE_HOST")
+port = os.getenv(f"{environ}_DATABASE_PORT")
+database = os.getenv(f"{environ}_DATABASE_NAME")
 
-
-username = "postgres"
-password = "Stridze35"
-host = "stridze.cmc9ollieibv.eu-west-3.rds.amazonaws.com"
-port = "5432"
-database = ""
 # Construct the connection URL
 connection_url = f"postgresql+psycopg2://{username}:{password}@{host}:{port}/{database}"
 
