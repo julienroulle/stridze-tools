@@ -5,16 +5,16 @@ from pydantic import BaseModel
 
 class StravaSchema(BaseModel):
     timestamp: datetime
-    temperature: int
-    moving: bool
+    temperature: int | None
+    moving: bool | None
     latitude: float
     longitude: float
-    speed: float
-    grade: float
+    speed: float | None
+    grade: float | None
     cadence: float | None
     distance: float
     heartrate: float | None
-    elevation: float
+    elevation: float | None
     activity_id: int
     user_id: int
     activity_type: str
