@@ -215,8 +215,9 @@ def download_all_activities(auth):
     activity_page = 1
     activity_list = []
     activities = get_activities(auth=auth, page=activity_page)
-
     while activities:
+        print(activities)
+        print(f"Downloading page {activity_page}")
         activity_page += 1
         activity_list.extend(activities)
         activities = get_activities(auth=auth, page=activity_page)

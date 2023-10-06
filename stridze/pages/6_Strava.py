@@ -33,8 +33,8 @@ if strava_auth is None:
 
 
 # activity = strava.select_strava_activity(strava_auth)
-activity_list = strava.download_all_activities(strava_auth)
-st.write(f"Found {len(activity_list)} activities")
+# activity_list = strava.download_all_activities(strava_auth)
+# st.write(f"Found {len(activity_list)} activities")
 # data = strava.download_activity(activity, strava_auth)
 
 from stridze.db import get_session
@@ -46,7 +46,6 @@ session = get_session()
 from ratelimit import limits, sleep_and_retry
 
 
-# Define the rate limit: 100 requests per minute
 @sleep_and_retry
 @limits(calls=15, period=900)
 def process_activity(activity, strava_auth, session):
@@ -64,13 +63,31 @@ def process_activity(activity, strava_auth, session):
 
 
 # Iterate over the activities with rate limiting
-for idx, activity in enumerate(activity_list):
-    with st.spinner(
-        f"Downloading activity {activity['id']} - \"{activity['name']}\" ({idx+1}/{len(activity_list)})..."
-    ):
-        if session.query(Strava).filter(Strava.activity_id == activity["id"]).first():
-            continue
-        process_activity(activity, strava_auth, session)
+@sleep_and_retry
+@limits(calls=15, period=900)
+def download_all_activities(auth):
+    activity_page = 1
+    activities = strava.get_activities(auth=auth, page=activity_page)
+    while activities:
+        print(activities)
+        print(f"Downloading page {activity_page}")
+        activity_page += 1
+        activities = strava.get_activities(auth=auth, page=activity_page)
+
+        for idx, activity in enumerate(activities):
+            with st.spinner(
+                f"Downloading activity {activity['id']} - \"{activity['name']}\"..."
+            ):
+                if (
+                    session.query(Strava)
+                    .filter(Strava.activity_id == activity["id"])
+                    .first()
+                ):
+                    continue
+                process_activity(activity, strava_auth, session)
+
+
+download_all_activities(strava_auth)
 # csv = data.to_csv()
 # csv_as_base64 = base64.b64encode(csv.encode()).decode()
 # st.markdown(
