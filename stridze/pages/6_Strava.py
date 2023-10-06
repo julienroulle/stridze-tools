@@ -64,7 +64,7 @@ def process_activity(activity, strava_auth, session):
 
 # Iterate over the activities with rate limiting
 @sleep_and_retry
-@limits(calls=15, period=900)
+@limits(calls=100, period=900)
 def download_all_activities(auth):
     activity_page = 1
     activities = strava.get_activities(auth=auth, page=activity_page)
