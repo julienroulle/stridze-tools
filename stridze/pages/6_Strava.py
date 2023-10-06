@@ -71,8 +71,6 @@ def download_all_activities(auth):
     while activities:
         print(activities)
         print(f"Downloading page {activity_page}")
-        activity_page += 1
-        activities = strava.get_activities(auth=auth, page=activity_page)
 
         for idx, activity in enumerate(activities):
             with st.spinner(
@@ -85,6 +83,9 @@ def download_all_activities(auth):
                 ):
                     continue
                 process_activity(activity, strava_auth, session)
+
+        activity_page += 1
+        activities = strava.get_activities(auth=auth, page=activity_page)
 
 
 download_all_activities(strava_auth)

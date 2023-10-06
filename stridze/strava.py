@@ -152,9 +152,7 @@ def get_activities(auth, page=1):
     access_token = auth["access_token"]
     response = httpx.get(
         url=f"{STRAVA_API_BASE_URL}/athlete/activities",
-        params={
-            "page": page,
-        },
+        params={"page": page, "per_page": 200},
         headers={
             "Authorization": f"Bearer {access_token}",
         },
