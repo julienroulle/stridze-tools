@@ -13,7 +13,7 @@ class StravaSchema(BaseModel):
     grade: float
     cadence: float | None
     distance: float
-    heartrate: float
+    heartrate: float | None
     elevation: float
     activity_id: int
     user_id: int
