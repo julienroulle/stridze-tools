@@ -19,6 +19,7 @@ from stridze.db.controllers import (
     get_user,
 )
 from stridze.db.models import GPXPoint, Lap, Record, TCXLap, TrackPoint
+from stridze.db.models.activity import Activity
 from stridze.db.schemas.activity import ActivityBase
 from stridze.db.schemas.lap import LapBase
 from stridze.db.schemas.record import RecordBase
@@ -272,9 +273,13 @@ def main():
         user = get_user(session, "ju.roulle@gmail.com")
         print(user.id)
         # get_user(db, 1)
-
         for activity_id in os.listdir("data/raw/"):
             if activity_id.endswith(".DS_Store"):
+                continue
+
+            print(f"Processing activity {activity_id}")
+            if session.query(Activity).filter(Activity.id == activity_id).first():
+                print(f"Activity {activity_id} already processed")
                 continue
 
             df = pd.read_csv(f"data/raw/{activity_id}/{activity_id}.csv")
