@@ -156,6 +156,7 @@ def get_activities(auth, page=1):
         headers={
             "Authorization": f"Bearer {access_token}",
         },
+        timeout=None,
     )
 
     return response.json()

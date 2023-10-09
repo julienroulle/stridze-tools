@@ -1,6 +1,7 @@
 import base64
 
 import altair as alt
+import stravalib
 import streamlit as st
 import sweat
 from pandas.api.types import is_numeric_dtype
@@ -43,49 +44,60 @@ from stridze.db.schemas.strava import StravaSchema
 
 session = get_session()
 
+import pydantic
 from ratelimit import limits, sleep_and_retry
 
 
 @sleep_and_retry
-@limits(calls=15, period=900)
+@limits(calls=50, period=900)
 def process_activity(activity, strava_auth, session):
-    data = sweat.read_strava(activity["id"], strava_auth["access_token"])
+    try:
+        data = sweat.read_strava(activity["id"], strava_auth["access_token"])
+    except AttributeError:
+        print(activity)
+        return
+    # except stravalib.exc.AccessUnauthorized:
+    #     print(activity)
+    #     return
     for timestamp, row in data.iterrows():
         d = row.to_dict()
         d["timestamp"] = timestamp
         d["user_id"] = strava_auth["athlete"]["id"]
         d["activity_id"] = activity["id"]
         d["activity_type"] = activity["sport_type"]
-        d = StravaSchema.parse_obj(d)
-        d = Strava(**d.dict())
-        session.add(d)
+
+        try:
+            d = StravaSchema.parse_obj(d)
+            d = Strava(**d.dict())
+            session.add(d)
+        except pydantic.error_wrappers.ValidationError as e:
+            print(e)
+            continue
     session.commit()
 
 
-# Iterate over the activities with rate limiting
-@sleep_and_retry
-@limits(calls=100, period=900)
 def download_all_activities(auth):
-    activity_page = 1
+    activity_page = 8
+    activity_list = []
     activities = strava.get_activities(auth=auth, page=activity_page)
-    while activities:
-        print(activities)
+    while activities and activity_page > 0:
         print(f"Downloading page {activity_page}")
-
-        for idx, activity in enumerate(activities):
-            with st.spinner(
-                f"Downloading activity {activity['id']} - \"{activity['name']}\"..."
-            ):
-                if (
-                    session.query(Strava)
-                    .filter(Strava.activity_id == activity["id"])
-                    .first()
-                ):
-                    continue
-                process_activity(activity, strava_auth, session)
-
-        activity_page += 1
+        activity_list.extend(activities)
+        activity_page -= 1
         activities = strava.get_activities(auth=auth, page=activity_page)
+
+    st.write(f"Found {len(activity_list)} activities")
+    for idx, activity in enumerate(activity_list):
+        with st.spinner(
+            f"Downloading activity {activity['id']} - \"{activity['name']}\"..."
+        ):
+            if (
+                session.query(Strava)
+                .filter(Strava.activity_id == activity["id"])
+                .first()
+            ):
+                continue
+            process_activity(activity, strava_auth, session)
 
 
 download_all_activities(strava_auth)
@@ -124,4 +136,5 @@ download_all_activities(strava_auth)
 #         )
 #         st.altair_chart(altair_chart, use_container_width=True)
 # else:
+#     st.write("No column(s) selected")
 #     st.write("No column(s) selected")

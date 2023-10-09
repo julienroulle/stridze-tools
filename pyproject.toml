@@ -34,7 +34,7 @@ arrow = "^1.3.0"
 httpx = "^0.25.0"
 sqlmodel = "^0.0.8"
 sweat = "^0.25.0"
-bokeh = "^3.2.2"
+bokeh = "2.4.3"
 boto3 = "^1.28.59"
 ratelimit = "^2.2.1"
 
