@@ -7,6 +7,7 @@ import fitdecode
 import gpxpy
 import pandas as pd
 import sqlalchemy
+from garminconnect import Garmin
 from lxml import objectify
 
 from stridze.db import get_session
@@ -272,19 +273,42 @@ def main():
         # create_user(db=session, user=user)
         user = get_user(session, "ju.roulle@gmail.com")
         print(user.id)
+
+        client = Garmin(user.email, user.password)
+        client.login()
         # get_user(db, 1)
         for activity_id in os.listdir("data/raw/"):
             if activity_id.endswith(".DS_Store"):
                 continue
 
             print(f"Processing activity {activity_id}")
+            print(client.get_activity_details(activity_id).keys())
             if session.query(Activity).filter(Activity.id == activity_id).first():
-                print(f"Activity {activity_id} already processed")
+                # print(f"Activity {activity_id} already processed")
                 continue
 
             df = pd.read_csv(f"data/raw/{activity_id}/{activity_id}.csv")
             df = df.replace("--", None)
             result = df.loc[df.Intervalle == "Summary"].iloc[0]
+
+            if "Allure moyenne" in result:
+                average_pace = int(
+                    reduce(
+                        lambda acc, x: acc * 60 + float(x),
+                        result["Allure moyenne"].split(":"),
+                        0,
+                    )
+                )
+                average_moving_pace = int(
+                    reduce(
+                        lambda acc, x: acc * 60 + float(x),
+                        result["Allure moyenne en déplacement"].split(":"),
+                        0,
+                    )
+                )
+            elif "Vitesse moyenne" in result:
+                average_pace = int(result["Vitesse moyenne"])
+                average_moving_pace = int(result["Vitesse moyenne en déplacement"])
 
             try:
                 activity = ActivityBase(
@@ -297,7 +321,7 @@ def main():
                             0,
                         )
                     )
-                    if result["Heure"]
+                    if "Heure" in result
                     else None,
                     moving_time=int(
                         reduce(
@@ -306,49 +330,33 @@ def main():
                             0,
                         )
                     )
-                    if result["Temps de déplacement"]
+                    if "Temps de déplacement" in result
                     else None,
                     distance=int(result[["Distance"]].astype(float).iloc[0] * 1000),
                     elevation_gain=int(result["Gain d'altitude"])
-                    if result["Gain d'altitude"]
+                    if "Gain d'altitude" in result
                     else None,
                     elevation_loss=int(result["Perte d'altitude"])
-                    if result["Perte d'altitude"]
+                    if "Perte d'altitude" in result
                     else None,
-                    average_pace=int(
-                        reduce(
-                            lambda acc, x: acc * 60 + float(x),
-                            result["Allure moyenne"].split(":"),
-                            0,
-                        )
-                    )
-                    if result["Allure moyenne"]
-                    else None,
-                    average_moving_pace=int(
-                        reduce(
-                            lambda acc, x: acc * 60 + float(x),
-                            result["Allure moyenne en déplacement"].split(":"),
-                            0,
-                        )
-                    )
-                    if result["Allure moyenne en déplacement"]
-                    else None,
+                    average_pace=average_pace,
+                    average_moving_pace=average_moving_pace,
                     average_cadence=int(result["Cadence de course moyenne"])
-                    if result["Cadence de course moyenne"]
+                    if "Cadence de course moyenne" in result
                     else None,
                     average_heart_rate=int(result["Fréquence cardiaque moy."])
-                    if result["Fréquence cardiaque moy."]
+                    if "Fréquence cardiaque moy." in result
                     else None,
                     max_heart_rate=int(result["Fréquence cardiaque maximale"])
-                    if result["Fréquence cardiaque maximale"]
+                    if "Fréquence cardiaque maximale" in result
                     else None,
                     average_stride_length=float(result["Longueur moyenne des foulées"])
-                    if result["Longueur moyenne des foulées"]
+                    if "Longueur moyenne des foulées" in result
                     else None,
                     average_temperature=float(result["Température moyenne"])
-                    if result["Température moyenne"]
+                    if "Température moyenne" in result
                     else None,
-                    calories=int(result["Calories"]) if result["Calories"] else None,
+                    calories=int(result["Calories"]) if "Calories" in result else None,
                 )
                 create_activity(session, activity)
 
