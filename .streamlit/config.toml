@@ -1,0 +1,8 @@
+[theme]
+    font="arial"
+
+[logger]
+    level = "error"
+
+[server]
+    headless = true

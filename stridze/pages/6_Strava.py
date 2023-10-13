@@ -51,6 +51,9 @@ from ratelimit import limits, sleep_and_retry
 @sleep_and_retry
 @limits(calls=50, period=900)
 def process_activity(activity, strava_auth, session):
+    print(activity["sport_type"])
+    if activity["sport_type"] in ["Swim", "Crossfit", "Workout"]:
+        return
     try:
         data = sweat.read_strava(activity["id"], strava_auth["access_token"])
     except AttributeError:
@@ -71,7 +74,6 @@ def process_activity(activity, strava_auth, session):
             d = Strava(**d.dict())
             session.add(d)
         except pydantic.error_wrappers.ValidationError as e:
-            print(e)
             continue
     session.commit()
 
@@ -85,7 +87,6 @@ def download_all_activities(auth):
         activity_list.extend(activities)
         activity_page -= 1
         activities = strava.get_activities(auth=auth, page=activity_page)
-
     st.write(f"Found {len(activity_list)} activities")
     for idx, activity in enumerate(activity_list):
         with st.spinner(
