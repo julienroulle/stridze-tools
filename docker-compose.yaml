@@ -1,0 +1,20 @@
+version: '3.2'
+
+services:
+  stridze-web:
+    container_name: stridze-container
+    restart: on-failure
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - PYTHONPATH=/app
+    volumes:
+      - ./stridze:/app/stridze
+      - ./data:/app/data
+    ports:
+      - "8501:8501"
+    command:
+      - bash
+      - -c
+      - streamlit run ./stridze/Dashboard.py --server.address=0.0.0.0 --server.port=8501
