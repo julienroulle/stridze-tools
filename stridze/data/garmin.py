@@ -5,12 +5,21 @@ from typing import List, Optional
 
 import fitdecode
 from garminconnect import Garmin
-from sqlmodel import Field, Relationship, SQLModel
+from sqlalchemy.orm import sessionmaker
+from sqlmodel import BigInteger, Column, Field, Relationship, SQLModel
 
-from stridze.db import get_session
+from stridze.db import engine
 
 
-class Lap(SQLModel, table=True):
+class FitActivity(SQLModel, table=True, extend_existing=True):
+    id: int = Field(default=None, primary_key=True, index=True)
+    garmin_id: Optional[int] = Field(sa_column=Column(BigInteger()))
+
+    laps: List["Lap"] = Relationship(back_populates="fitactivity")
+    records: List["Record"] = Relationship(back_populates="fitactivity")
+
+
+class Lap(SQLModel, table=True, extend_existing=True):
     id: int = Field(default=None, primary_key=True, index=True)
     timestamp: Optional[datetime]
     start_time: Optional[datetime]
@@ -89,10 +98,13 @@ class Lap(SQLModel, table=True):
     total_fractional_ascent: Optional[float]
     total_fractional_descent: Optional[float]
 
+    fitactivity_id: Optional[int] = Field(default=None, foreign_key="fitactivity.id")
+    fitactivity: Optional[FitActivity] = Relationship(back_populates="laps")
+
     records: List["Record"] = Relationship(back_populates="lap")
 
 
-class Record(SQLModel, table=True):
+class Record(SQLModel, table=True, extend_existing=True):
     id: int = Field(default=None, primary_key=True, index=True)
     timestamp: Optional[datetime]
     position_lat: Optional[int]
@@ -115,12 +127,16 @@ class Record(SQLModel, table=True):
     lap_id: Optional[int] = Field(default=None, foreign_key="lap.id")
     lap: Optional[Lap] = Relationship(back_populates="records")
 
+    fitactivity_id: Optional[int] = Field(default=None, foreign_key="fitactivity.id")
+    fitactivity: Optional[FitActivity] = Relationship(back_populates="records")
+
 
 def main():
-    session = get_session()
+    session = sessionmaker(engine)()
+    SQLModel.metadata.create_all(engine)
     client = Garmin("ju.roulle@gmail.com", "Julien35830")
     client.login()
-    activities = client.get_activities(0, 10000)
+    activities = client.get_activities(0, 100)
     """
     Download an Activity
     """
@@ -130,6 +146,8 @@ def main():
             activity_id, dl_fmt=client.ActivityDownloadFormat.ORIGINAL
         )
         print(f"Downloaded activity {activity_id}")
+        activity = FitActivity(garmin_id=activity_id)
+        session.add(activity)
         with zipfile.ZipFile(io.BytesIO(data), "r") as zip_file:
             for file_name in zip_file.namelist():
                 file_content = zip_file.read(file_name)
@@ -157,13 +175,16 @@ def main():
                                 for field in frame.fields:
                                     if "unknown" not in field.name:
                                         lap[field.name] = field.value
-                                lap = Lap(**lap)
+                                lap = Lap(**lap, fitactivity=activity)
                                 session.add(lap)
                                 for record in records:
-                                    record = Record(**record, lap=lap)
+                                    record = Record(
+                                        **record, fitactivity=activity, lap=lap
+                                    )
                                     session.add(record)
                                 records = []
                                 session.commit()
+        break
 
 
 if __name__ == "__main__":
