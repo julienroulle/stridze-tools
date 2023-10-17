@@ -3,6 +3,7 @@ from sqlalchemy.orm import relationship
 
 from .. import Base
 
+
 class User(Base):
     __tablename__ = "users"
 
@@ -11,6 +12,5 @@ class User(Base):
     last_name = Column(String(32))
     email = Column(String(32), unique=True, index=True, nullable=False)
     password = Column(String(32))
-    vdot = Column(Integer)
 
-    activities = relationship('Activity', back_populates='user')
+    activities = relationship("Activity", back_populates="user")
