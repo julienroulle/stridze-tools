@@ -5,10 +5,6 @@ from .models.activity import Activity
 from .models.lap import Lap
 from .models.record import Record
 from .models.user import User
-from .schemas.activity import ActivityBase
-from .schemas.lap import LapBase
-from .schemas.record import RecordBase
-from .schemas.user import UserBase
 
 
 def get_db_size(db: Session) -> None:
