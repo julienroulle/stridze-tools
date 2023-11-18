@@ -1,14 +1,17 @@
-
 import math
+
 import numpy as np
+
 
 def percent_hrr_to_percent_vo2max(percent_hrr):
     # Source: 10.1249/01.mss.0000246996.63976.5f
     return 1.069 * percent_hrr - 5.747
 
+
 def percent_vo2max_to_percent_hrr(percent_vo2max):
     # Source: 10.1249/01.mss.0000246996.63976.5f
     return (percent_vo2max + 5.747) / 1.069
+
 
 def convert_distance_to_meters(distance, units):
     """Return distance in meters
@@ -115,7 +118,7 @@ def velocity(distance, time):
     # >>> velocity(-3000, 10)
     # -300
 
-    velocity = distance/time
+    velocity = distance / time
     return velocity
 
 
@@ -152,6 +155,7 @@ def velocity_to_min_per_mile(velocity):
     # pace = str(pace).split(".")
     # pace = "{}:{}".format(pace[0], seconds)
     return pace
+
 
 def velocity_to_min_per_km(velocity):
     """Return minutes per km"""
