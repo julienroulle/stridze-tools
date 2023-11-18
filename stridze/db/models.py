@@ -5,6 +5,8 @@ from sqlmodel import BigInteger, Column, Field, Relationship, SQLModel
 
 
 class User(SQLModel, table=True):
+    __table_args__ = {"extend_existing": True}
+
     id: int = Field(default=None, primary_key=True, index=True)
     first_name: Optional[str] = Field(default=None)
     last_name: Optional[str] = Field(default=None)
@@ -13,8 +15,13 @@ class User(SQLModel, table=True):
 
     activities: List["Activity"] = Relationship(back_populates="user")
 
+    def __str__(self):
+        return f"User ({self.id})"
+
 
 class Activity(SQLModel, table=True):
+    __table_args__ = {"extend_existing": True}
+
     id: int = Field(default=None, primary_key=True, index=True)
     garmin_id: Optional[int] = Field(sa_column=Column(BigInteger()))
     activity_type: Optional[str]
@@ -40,7 +47,9 @@ class Activity(SQLModel, table=True):
     records: List["Record"] = Relationship(back_populates="activity")
 
 
-class Lap(SQLModel, table=True, extend_existing=True):
+class Lap(SQLModel, table=True):
+    __table_args__ = {"extend_existing": True}
+
     id: int = Field(default=None, primary_key=True, index=True)
     timestamp: Optional[datetime]
     start_time: Optional[datetime]
@@ -125,7 +134,9 @@ class Lap(SQLModel, table=True, extend_existing=True):
     records: List["Record"] = Relationship(back_populates="lap")
 
 
-class Record(SQLModel, table=True, extend_existing=True):
+class Record(SQLModel, table=True):
+    __table_args__ = {"extend_existing": True}
+
     id: int = Field(default=None, primary_key=True, index=True)
     timestamp: Optional[datetime]
     position_lat: Optional[int]

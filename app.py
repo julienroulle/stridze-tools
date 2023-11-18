@@ -9,7 +9,6 @@ admin = Admin(app, engine)
 
 
 class UserAdmin(ModelView, model=User):
-    name = "User"
     name_plural = "Users"
     icon = "fa-solid fa-user"
     category = "accounts"
@@ -21,6 +20,7 @@ admin.add_view(UserAdmin)
 
 
 class ActivityAdmin(ModelView, model=Activity):
+    name_plural = "Activities"
     column_list = [
         Activity.id,
         Activity.activity_type,
