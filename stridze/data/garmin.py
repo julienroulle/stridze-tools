@@ -25,7 +25,7 @@ def main():
         for activity in activities:
             activity_id = activity["activityId"]
             query = select(Activity).where(Activity.garmin_id == activity_id)
-            result = session.execute(query).first()
+            result = session.exec(query).first()
             if result:
                 continue
             data = client.download_activity(

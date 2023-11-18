@@ -1,6 +1,10 @@
 import asyncio
 
 import streamlit as st
+from sqlmodel import Session, select
+
+from stridze.db import engine
+from stridze.db.models import Activity, Lap, Record, User
 
 st.set_page_config(
     page_title="Hello",
@@ -26,11 +30,10 @@ system = st.sidebar.radio("Unit System", ("Metric", "Imperial"), index=0)
 if system is not None:
     st.session_state["system"] = system
 
-st.write("# Welcome to Stridze Tools!")
-st.markdown(
-    """
-    Stridze Tools is an open-source app built specifically for Runners.
+session = Session(engine)
+query = select(User).where(User.email == "ju.roulle@gmail.com")
+user = session.exec(query).first()
+query = select(Activity).where(Activity.user_id == user.id)
+result = session.exec(query).all()
 
-    **👈 Select a tool from the sidebar** to see some examples of what Stridze can do!
-"""
-)
+st.write(f"Found {len(result)} activities")
