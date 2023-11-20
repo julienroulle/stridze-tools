@@ -1,10 +1,7 @@
 from sqlalchemy import MetaData
 from sqlalchemy.orm import Session
 
-from .models.activity import Activity
-from .models.lap import Lap
-from .models.record import Record
-from .models.user import User
+from stridze.db.models import Activity, Lap, Record, User
 
 
 def get_db_size(db: Session) -> None:
@@ -34,7 +31,7 @@ def get_user(db: Session, user_email: str) -> User:
     return user
 
 
-def create_user(db: Session, user: UserBase):
+def create_user(db: Session, user):
     db_user = User(**user.__dict__)
     db.add(db_user)
     db.commit()
@@ -42,7 +39,7 @@ def create_user(db: Session, user: UserBase):
     return db_user
 
 
-def create_activity(db: Session, activity: ActivityBase) -> Activity:
+def create_activity(db: Session, activity) -> Activity:
     db_element = Activity(**activity.__dict__)
     # existing_element = db.query(Activity).filter(Activity.id == db_element.id).first()
 
@@ -55,7 +52,7 @@ def create_activity(db: Session, activity: ActivityBase) -> Activity:
     return db_element
 
 
-def create_record(db: Session, record: RecordBase) -> Record:
+def create_record(db: Session, record) -> Record:
     db_element = Record(**record.__dict__)
     # existing_element = (
     #     db.query(Record).filter(Record.timestamp == db_element.timestamp).first()
@@ -70,7 +67,7 @@ def create_record(db: Session, record: RecordBase) -> Record:
     return db_element
 
 
-def create_lap(db: Session, lap: LapBase) -> Lap:
+def create_lap(db: Session, lap) -> Lap:
     db_element = Lap(**lap.__dict__)
     # existing_element = (
     #     db.query(Lap).filter(Lap.start_time == db_element.start_time).first()

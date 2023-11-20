@@ -25,7 +25,7 @@ database = os.getenv(f"{environ}_DATABASE_NAME")
 connection_url = f"postgresql+psycopg2://{username}:{password}@{host}:{port}/{database}"
 
 # Create the database engine
-engine = create_engine(connection_url, poolclass=QueuePool)
+engine = create_engine(connection_url)  # , poolclass=QueuePool)
 
 # Base = declarative_base()
 
@@ -33,9 +33,9 @@ engine = create_engine(connection_url, poolclass=QueuePool)
 
 # Base.metadata.create_all(engine)
 
-# SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 
-# # Dependency
-# def get_session():
-#     return SessionLocal()
+# Dependency
+def get_session():
+    return SessionLocal()
