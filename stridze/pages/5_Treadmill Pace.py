@@ -1,7 +1,8 @@
 import pathlib
 
+# from xgboost import XGBRegressor
+import joblib
 import streamlit as st
-from xgboost import XGBRegressor
 
 system = st.sidebar.radio("Unit System", ("Metric", "Imperial"), index=0)
 
@@ -13,16 +14,15 @@ if system is not None:
 
 st.title("Treadmill Pace Calculator")
 
-model = XGBRegressor()
 path = pathlib.Path(__file__).parent.parent.absolute()
-model_path = path.joinpath("models/treadmill_incline.json")
+model_path = path.joinpath("models/treadmill_incline.joblib")
 
-model.load_model(model_path)
+model = joblib.load(model_path)
 
 grade_header, grade_clm = st.columns([1, 2])
 
 grade_header.header("Incline (%)")
-grade = grade_clm.slider("", 0, 15, 0, 1)
+grade = grade_clm.slider("", 0.0, 15.0, 1.0, 0.5)
 
 pace_header, pace_min_clm, pace_sec_clm = st.columns(3)
 pace_header.header("Pace (min/km)")
@@ -43,7 +43,7 @@ pace_sec = pace_sec_clm.number_input(
 
 pace = pace_min + pace_sec / 60
 
-treadmill_speed = model.predict([[grade, pace]])[0]
+treadmill_speed = model.predict([[grade, 1 / pace]])[0]
 
 speed_header, speed_value = st.columns(2)
 speed_header.header("Target Speed: ")
