@@ -9,7 +9,7 @@ from sqlalchemy.pool import QueuePool
 # Replace the placeholders with your actual database information
 # Detect platform to set the environment
 # environ = "DEV"
-environ = "PROD"
+environ = "DEV"
 
 # Load the stored environment variables
 load_dotenv(find_dotenv())
@@ -25,9 +25,7 @@ database = os.getenv(f"{environ}_DATABASE_NAME")
 connection_url = f"postgresql+psycopg2://{username}:{password}@{host}:{port}/{database}"
 
 # Create the database engine
-engine = create_engine(
-    connection_url,
-)  # , poolclass=QueuePool)
+engine = create_engine(connection_url, poolclass=QueuePool)
 
 # Base = declarative_base()
 

@@ -1,12 +1,16 @@
 import base64
 
 import altair as alt
+import pydantic
 import stravalib
 import streamlit as st
 import sweat
 from pandas.api.types import is_numeric_dtype
+from ratelimit import limits, sleep_and_retry
 
 import stridze.strava as strava
+from stridze.db import get_session
+from stridze.db.models import Strava
 
 st.set_page_config(
     page_title="Streamlit Activity Viewer for Strava",
@@ -38,14 +42,7 @@ if strava_auth is None:
 # st.write(f"Found {len(activity_list)} activities")
 # data = strava.download_activity(activity, strava_auth)
 
-from stridze.db import get_session
-from stridze.db.models import Strava
-from stridze.db.schemas.strava import StravaSchema
-
 session = get_session()
-
-import pydantic
-from ratelimit import limits, sleep_and_retry
 
 
 @sleep_and_retry
@@ -70,8 +67,7 @@ def process_activity(activity, strava_auth, session):
         d["activity_type"] = activity["sport_type"]
 
         try:
-            d = StravaSchema.parse_obj(d)
-            d = Strava(**d.dict())
+            d = Strava(**d)
             session.add(d)
         except pydantic.error_wrappers.ValidationError as e:
             continue

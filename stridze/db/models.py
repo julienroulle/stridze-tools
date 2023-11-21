@@ -161,3 +161,22 @@ class Record(SQLModel, table=True):
 
     activity_id: Optional[int] = Field(default=None, foreign_key="activity.id")
     activity: Optional[Activity] = Relationship(back_populates="records")
+
+
+class Strava(SQLModel, table=True):
+    __table_args__ = {"extend_existing": True}
+
+    id: int = Field(default=None, primary_key=True, index=True)
+    timestamp: Optional[datetime]
+    temperature: Optional[int]
+    moving: Optional[bool]
+    latitude: Optional[float]
+    longitude: Optional[float]
+    speed: Optional[float]
+    grade: Optional[float]
+    cadence: Optional[float]
+    distance: Optional[float]
+    heartrate: Optional[float]
+    elevation: Optional[float]
+    activity_id: Optional[int] = Field(sa_column=Column(BigInteger()))
+    user_id: Optional[int] = Field(sa_column=Column(BigInteger()))
