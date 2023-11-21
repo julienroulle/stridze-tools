@@ -30,10 +30,10 @@ system = st.sidebar.radio("Unit System", ("Metric", "Imperial"), index=0)
 if system is not None:
     st.session_state["system"] = system
 
-session = Session(engine)
-query = select(User).where(User.email == "ju.roulle@gmail.com")
-user = session.exec(query).first()
-query = select(Activity).where(Activity.user_id == user.id)
-result = session.exec(query).all()
+# session = Session(engine)
+# query = select(User).where(User.email == "ju.roulle@gmail.com")
+# user = session.exec(query).first()
+# query = select(Activity).where(Activity.user_id == user.id)
+# result = session.exec(query).all()
 
-st.write(f"Found {len(result)} activities")
+# st.write(f"Found {len(result)} activities")
