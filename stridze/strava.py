@@ -32,7 +32,7 @@ def authorization_url():
         url=STRAVA_AUTHORIZATION_URL,
         params={
             "client_id": STRAVA_CLIENT_ID,
-            "client_secret": STRAVA_CLIENT_SECRET,
+            # "client_secret": STRAVA_CLIENT_SECRET,
             "redirect_uri": APP_URL,
             "response_type": "code",
             "approval_prompt": "auto",
@@ -55,7 +55,7 @@ def login_header(header=None):
     base64_image = load_image_as_base64("./assets/btn_strava_connectwith_orange@2x.png")
     base.markdown(
         (
-            f'<a href="{strava_authorization_url}">'
+            f'<a href="{strava_authorization_url}" target="_self">'
             f'  <img alt="strava login" src="data:image/png;base64,{base64_image}" width="100%">'
             f"</a>"
         ),

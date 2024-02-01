@@ -1,11 +1,11 @@
-from sqlalchemy import MetaData
+from sqlalchemy import MetaData, text
 from sqlalchemy.orm import Session
 
 from stridze.db.models import Activity, Lap, Record, User
 
 
 def get_db_size(db: Session) -> None:
-    query = "SELECT pg_size_pretty(pg_database_size(current_database())) AS size;"
+    query = text("SELECT pg_size_pretty(pg_database_size(current_database())) AS size;")
     result = db.execute(query)
 
     # Fetch the result

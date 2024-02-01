@@ -180,3 +180,14 @@ class Strava(SQLModel, table=True):
     elevation: Optional[float]
     activity_id: Optional[int] = Field(sa_column=Column(BigInteger()))
     user_id: Optional[int] = Field(sa_column=Column(BigInteger()))
+
+
+class StravaToken(SQLModel, table=True):
+    __table_args__ = {"extend_existing": True}
+
+    id: int = Field(default=None, primary_key=True, index=True)
+    access_token: Optional[str]
+    refresh_token: Optional[str]
+    expires_at: Optional[int]
+    scope: Optional[str]
+    athlete: Optional[str]

@@ -18,3 +18,5 @@ cookiecutter_data_science.egg-info/
 data/raw
 .env
 data/external/data.parquet
+
+data/

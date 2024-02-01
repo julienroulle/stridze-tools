@@ -117,8 +117,10 @@ def velocity(distance, time):
     # -300
     # >>> velocity(-3000, 10)
     # -300
-
-    velocity = distance / time
+    if distance == 0 or time == 0:
+        velocity = 0
+    else:
+        velocity = distance / time
     return velocity
 
 

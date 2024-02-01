@@ -4,20 +4,18 @@ import altair as alt
 import pydantic
 import stravalib
 import streamlit as st
-import sweat
 from pandas.api.types import is_numeric_dtype
 from ratelimit import limits, sleep_and_retry
 
 import stridze.strava as strava
 from stridze.db import get_session
 from stridze.db.models import Strava
+from stridze.lib.sweat.strava import read_strava
 
 st.set_page_config(
     page_title="Streamlit Activity Viewer for Strava",
     page_icon=":circus_tent:",
 )
-
-st.image("https://analytics.gssns.io/pixel.png")
 
 strava_header = strava.header()
 
@@ -52,7 +50,7 @@ def process_activity(activity, strava_auth, session):
     if activity["sport_type"] in ["Swim", "Crossfit", "Workout"]:
         return
     try:
-        data = sweat.read_strava(activity["id"], strava_auth["access_token"])
+        data = read_strava(activity["id"], strava_auth["access_token"])
     except AttributeError:
         print(activity)
         return
@@ -75,7 +73,7 @@ def process_activity(activity, strava_auth, session):
 
 
 def download_all_activities(auth):
-    activity_page = 8
+    activity_page = 9
     activity_list = []
     activities = strava.get_activities(auth=auth, page=activity_page)
     while activities and activity_page > 0:
@@ -97,7 +95,7 @@ def download_all_activities(auth):
             process_activity(activity, strava_auth, session)
 
 
-download_all_activities(strava_auth)
+# download_all_activities(strava_auth)
 # csv = data.to_csv()
 # csv_as_base64 = base64.b64encode(csv.encode()).decode()
 # st.markdown(

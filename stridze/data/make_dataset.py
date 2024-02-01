@@ -20,11 +20,6 @@ from stridze.db.controllers import (
     get_user,
 )
 from stridze.db.models import GPXPoint, Lap, Record, TCXLap, TrackPoint
-from stridze.db.models.activity import Activity
-from stridze.db.schemas.activity import ActivityBase
-from stridze.db.schemas.lap import LapBase
-from stridze.db.schemas.record import RecordBase
-from stridze.db.schemas.user import UserBase
 
 
 @contextmanager
