@@ -22,13 +22,13 @@ model = joblib.load(model_path)
 grade_header, grade_clm = st.columns([1, 2])
 
 grade_header.header("Incline (%)")
-grade = grade_clm.slider("", 0.0, 15.0, 1.0, 0.5)
+grade = grade_clm.slider("", -3.0, 25.0, 0.0, 0.5)
 
 pace_header, pace_min_clm, pace_sec_clm = st.columns(3)
 pace_header.header("Pace (min/km)")
 pace_min = pace_min_clm.number_input(
     "Minutes",
-    value=0,
+    value=5,
     min_value=0,
     max_value=59,
     key="distance_tab_pace_col_minutes",

@@ -1,7 +1,5 @@
 import asyncio
-import datetime
 
-import extra_streamlit_components as stx
 import pandas as pd
 import streamlit as st
 
@@ -10,22 +8,6 @@ from stridze.db import engine
 st.set_page_config(
     page_title="Hello", page_icon=":running_shirt_with_sash:", layout="wide"
 )
-
-
-st.write("# Cookie Manager")
-
-
-@st.cache_resource(experimental_allow_widgets=True)
-def get_manager():
-    return stx.CookieManager()
-
-
-cookie_manager = get_manager()
-
-st.subheader("All Cookies:")
-cookies = cookie_manager.get_all()
-st.write(cookies)
-
 c1, c2, c3 = st.columns(3)
 
 
@@ -111,8 +93,3 @@ if system is not None:
 # )
 # fig.layout = layout
 # st.plotly_chart(fig)
-
-st.image(
-    "/Users/julienroulle/dev/stridze-tools/assets/fitsum-admasu-oGv9xIl7DkY-unsplash.jpg",
-    use_column_width=True,
-)
