@@ -8,37 +8,6 @@ from stridze.db import engine
 st.set_page_config(
     page_title="Hello", page_icon=":running_shirt_with_sash:", layout="wide"
 )
-c1, c2, c3 = st.columns(3)
-
-
-@st.cache_resource()
-def get_db_connection():
-    return engine.connect()
-
-
-conn = get_db_connection()
-
-
-@st.cache_data(show_spinner=False)
-def get_activities():
-    df = pd.read_sql_table("activity", conn)
-    df = df.loc[
-        df["activity_type"].isin(["running", "trail_running", "treadmill_running"])
-    ]
-    print(df.activity_type.unique())
-    return df
-
-
-@st.cache_data(show_spinner=False)
-def get_records():
-    df = pd.read_sql_table("record", conn)
-    return df
-
-
-@st.cache_data(show_spinner=False)
-def get_laps():
-    df = pd.read_sql_table("lap", conn)
-    return df
 
 
 def get_or_create_eventloop():
