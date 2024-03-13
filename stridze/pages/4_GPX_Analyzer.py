@@ -293,6 +293,7 @@ if uploaded_file is not None:
         lambda row: f"{row / 1000:.3f} km"
     )
     display_df["Elevation"] = elev_df.smooth_elevation.apply(lambda row: f"{row:.0f} m")
+    display_df["Grade"] = elev_df.grade.apply(lambda row: f"{row:.1f}%")
     display_df["Pace"] = elev_df.pace.apply(
         lambda row: f"{row // 60:.0f}:{row % 60:02.0f} min/km"
     )
